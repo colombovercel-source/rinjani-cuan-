@@ -10,22 +10,23 @@
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="wrapper">
+<div class="container">
 
     <h1 class="main-title">FREEBET 20.000 RINJANI4D</h1>
 
     <!-- LOGIN -->
-    <div id="loginCard" class="card">
-        <p>Member Login Area</p>
-        <input type="text" id="usernameInput" placeholder="Masukkan Username Member" autocomplete="off">
-        <button id="loginBtn">LOGIN SEKARANG</button>
+    <div id="loginCard" class="card center">
+        <p class="section-title">Member Login</p>
+        <input type="text" id="usernameInput" placeholder="Masukkan Username Member">
+        <button id="loginBtn" class="primary-btn">LOGIN SEKARANG</button>
     </div>
 
     <!-- DASHBOARD -->
-    <div id="dashboardCard" class="card hidden">
-        <div class="header">
-            <h2>Halo, <span id="displayUsername"></span> 👋</h2>
-            <button id="logoutBtn" class="logout">Logout</button>
+    <div id="dashboardCard" class="card hidden center">
+
+        <div class="member-info">
+            <h2 id="displayUsername"></h2>
+            <span class="verified-badge">✔ Member Terverifikasi</span>
         </div>
 
         <div class="balance-box">
@@ -33,24 +34,37 @@
             <h1 id="balanceAmount">Rp 0</h1>
         </div>
 
-        <button id="claimButton" class="claim-btn">
+        <div class="stats-box">
+            <p>Total Claim Hari Ini</p>
+            <h3><span id="totalClaimToday">0</span> Member</h3>
+        </div>
+
+        <button id="claimButton" class="primary-btn">
             CLAIM FREEBET Rp 20.000
         </button>
 
-        <p id="statusMessage" class="status"></p>
+        <p id="statusMessage" class="status-text"></p>
 
-        <div class="withdraw-info">
-            <p>Untuk pencairan freebet, silakan hubungi:</p>
+        <div class="withdraw-box">
+            <p>Untuk pencairan freebet hubungi:</p>
             <a href="https://rinjanipuncak.com" target="_blank" class="cs-link">
                 CS RINJANI4D
             </a>
         </div>
+
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+
     </div>
 
+    <!-- LIVE FEED -->
+    <div class="live-feed">
+        <span id="liveFeedText"></span>
+    </div>
+
+    <!-- FOOTER -->
     <div class="footer-text">
-        Sistem ini merupakan tampilan resmi halaman claim freebet khusus member aktif RINJANI4D. 
-        Setiap claim tercatat secara otomatis dan hanya dapat dilakukan sesuai ketentuan sistem. 
-        Pastikan Anda login menggunakan username member yang valid untuk mengakses bonus FREEBET 20.000.
+        Halaman ini merupakan tampilan resmi sistem claim FREEBET 20.000 RINJANI4D.
+        Sistem mencatat setiap aktivitas claim secara otomatis sesuai ketentuan member aktif.
     </div>
 
 </div>
