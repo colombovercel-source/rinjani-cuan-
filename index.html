@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RINJANI4D - Member Area</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- LOGIN -->
+    <div id="loginCard" class="card">
+        <h1>RINJANI4D</h1>
+        <p>Member Login</p>
+        <input type="text" id="usernameInput" placeholder="Masukkan Username" autocomplete="off">
+        <button id="loginBtn">LOGIN</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardCard" class="card hidden">
+        <div class="header">
+            <h2>Halo, <span id="displayUsername"></span> 👋</h2>
+            <button id="logoutBtn" class="logout">Logout</button>
+        </div>
+
+        <div class="balance-box">
+            <p>Saldo Anda</p>
+            <h1 id="balanceAmount">Rp 0</h1>
+        </div>
+
+        <button id="claimButton" class="claim-btn">CLAIM BONUS</button>
+
+        <p id="statusMessage" class="status"></p>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
