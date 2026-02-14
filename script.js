@@ -57,8 +57,7 @@ function updateBalance() {
 
 function claimBonus() {
     const username = localStorage.getItem("activeUser");
-    const userKey = getUserKey(username);
-    const userData = JSON.parse(localStorage.getItem(userKey));
+    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
     const now = Date.now();
 
     if (userData.lastClaim && now - userData.lastClaim < CLAIM_INTERVAL) return;
@@ -66,11 +65,11 @@ function claimBonus() {
     userData.balance += BONUS_AMOUNT;
     userData.lastClaim = now;
 
-    localStorage.setItem(userKey, JSON.stringify(userData));
+    localStorage.setItem(getUserKey(username), JSON.stringify(userData));
 
     updateBalance();
     checkClaimStatus();
-    alert("Bonus Rp 20.000 berhasil diklaim!");
+    alert("FREEBET 20.000 berhasil diklaim!");
 }
 
 function checkClaimStatus() {
@@ -79,7 +78,7 @@ function checkClaimStatus() {
     const now = Date.now();
 
     if (!userData.lastClaim || now - userData.lastClaim >= CLAIM_INTERVAL) {
-        statusMessage.textContent = "Bonus siap diklaim!";
+        statusMessage.textContent = "Freebet siap diklaim!";
         claimButton.disabled = false;
         return;
     }
@@ -121,7 +120,7 @@ logoutBtn.addEventListener("click", logout);
 window.addEventListener("load", showDashboard);
 
 /* ===============================
-   3D Animated Particle Background
+   3D Moving Background
 =================================*/
 
 const canvas = document.getElementById("bgCanvas");
@@ -141,9 +140,7 @@ class Particle {
 
     move() {
         this.z -= 2;
-        if (this.z <= 0) {
-            this.z = canvas.width;
-        }
+        if (this.z <= 0) this.z = canvas.width;
     }
 
     draw() {
