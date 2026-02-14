@@ -1,4 +1,4 @@
-const BONUS_AMOUNT = 5000;
+const BONUS_AMOUNT = 20000;
 const CLAIM_INTERVAL = 24 * 60 * 60 * 1000;
 
 const loginCard = document.getElementById("loginCard");
@@ -19,8 +19,7 @@ function getUserKey(username) {
 
 function login() {
     const username = usernameInput.value.trim();
-
-    if (username === "") {
+    if (!username) {
         alert("Username tidak boleh kosong!");
         return;
     }
@@ -29,11 +28,10 @@ function login() {
 
     const userKey = getUserKey(username);
     if (!localStorage.getItem(userKey)) {
-        const userData = {
+        localStorage.setItem(userKey, JSON.stringify({
             balance: 0,
             lastClaim: null
-        };
-        localStorage.setItem(userKey, JSON.stringify(userData));
+        }));
     }
 
     showDashboard();
@@ -53,9 +51,7 @@ function showDashboard() {
 
 function updateBalance() {
     const username = localStorage.getItem("activeUser");
-    const userKey = getUserKey(username);
-    const userData = JSON.parse(localStorage.getItem(userKey));
-
+    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
     balanceAmount.textContent = "Rp " + userData.balance.toLocaleString();
 }
 
@@ -65,9 +61,7 @@ function claimBonus() {
     const userData = JSON.parse(localStorage.getItem(userKey));
     const now = Date.now();
 
-    if (userData.lastClaim && now - userData.lastClaim < CLAIM_INTERVAL) {
-        return;
-    }
+    if (userData.lastClaim && now - userData.lastClaim < CLAIM_INTERVAL) return;
 
     userData.balance += BONUS_AMOUNT;
     userData.lastClaim = now;
@@ -76,27 +70,21 @@ function claimBonus() {
 
     updateBalance();
     checkClaimStatus();
-
-    alert("Bonus berhasil diklaim!");
+    alert("Bonus Rp 20.000 berhasil diklaim!");
 }
 
 function checkClaimStatus() {
     const username = localStorage.getItem("activeUser");
-    const userKey = getUserKey(username);
-    const userData = JSON.parse(localStorage.getItem(userKey));
+    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
     const now = Date.now();
 
     if (!userData.lastClaim || now - userData.lastClaim >= CLAIM_INTERVAL) {
         statusMessage.textContent = "Bonus siap diklaim!";
         claimButton.disabled = false;
-        claimButton.style.opacity = "1";
-        if (countdownInterval) clearInterval(countdownInterval);
         return;
     }
 
     claimButton.disabled = true;
-    claimButton.style.opacity = "0.6";
-
     const remaining = CLAIM_INTERVAL - (now - userData.lastClaim);
     startCountdown(remaining);
 }
@@ -111,9 +99,9 @@ function startCountdown(time) {
             return;
         }
 
-        const hours = Math.floor(time / (1000 * 60 * 60));
-        const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((time % (1000 * 60)) / 1000);
+        const hours = Math.floor(time / 3600000);
+        const minutes = Math.floor((time % 3600000) / 60000);
+        const seconds = Math.floor((time % 60000) / 1000);
 
         statusMessage.textContent =
             `Tunggu ${hours}j ${minutes}m ${seconds}d untuk claim berikutnya`;
@@ -130,5 +118,70 @@ function logout() {
 loginBtn.addEventListener("click", login);
 claimButton.addEventListener("click", claimBonus);
 logoutBtn.addEventListener("click", logout);
-
 window.addEventListener("load", showDashboard);
+
+/* ===============================
+   3D Animated Particle Background
+=================================*/
+
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.z = Math.random() * canvas.width;
+    }
+
+    move() {
+        this.z -= 2;
+        if (this.z <= 0) {
+            this.z = canvas.width;
+        }
+    }
+
+    draw() {
+        const x = (this.x - canvas.width / 2) * (canvas.width / this.z) + canvas.width / 2;
+        const y = (this.y - canvas.height / 2) * (canvas.width / this.z) + canvas.height / 2;
+        const size = (1 - this.z / canvas.width) * 3;
+
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = "cyan";
+        ctx.fill();
+    }
+}
+
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < 200; i++) {
+        particles.push(new Particle());
+    }
+}
+
+function animate() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+        p.move();
+        p.draw();
+    });
+
+    requestAnimationFrame(animate);
+}
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initParticles();
+});
+
+initParticles();
+animate();
