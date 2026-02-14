@@ -10,8 +10,12 @@ const displayUsername = document.getElementById("displayUsername");
 const balanceAmount = document.getElementById("balanceAmount");
 const claimButton = document.getElementById("claimButton");
 const statusMessage = document.getElementById("statusMessage");
+const totalClaimToday = document.getElementById("totalClaimToday");
+const liveFeedText = document.getElementById("liveFeedText");
 
 let countdownInterval = null;
+
+/* LOGIN */
 
 function getUserKey(username) {
     return `rinjani4d_${username}`;
@@ -49,6 +53,8 @@ function showDashboard() {
     checkClaimStatus();
 }
 
+/* CLAIM */
+
 function updateBalance() {
     const username = localStorage.getItem("activeUser");
     const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
@@ -57,7 +63,8 @@ function updateBalance() {
 
 function claimBonus() {
     const username = localStorage.getItem("activeUser");
-    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
+    const userKey = getUserKey(username);
+    const userData = JSON.parse(localStorage.getItem(userKey));
     const now = Date.now();
 
     if (userData.lastClaim && now - userData.lastClaim < CLAIM_INTERVAL) return;
@@ -65,8 +72,9 @@ function claimBonus() {
     userData.balance += BONUS_AMOUNT;
     userData.lastClaim = now;
 
-    localStorage.setItem(getUserKey(username), JSON.stringify(userData));
+    localStorage.setItem(userKey, JSON.stringify(userData));
 
+    incrementTotalClaim();
     updateBalance();
     checkClaimStatus();
     alert("FREEBET 20.000 berhasil diklaim!");
@@ -109,6 +117,38 @@ function startCountdown(time) {
     }, 1000);
 }
 
+/* TOTAL CLAIM */
+
+function initTotalClaim() {
+    if (!localStorage.getItem("totalClaimToday")) {
+        const start = Math.floor(Math.random() * 150) + 120;
+        localStorage.setItem("totalClaimToday", start);
+    }
+    totalClaimToday.textContent = localStorage.getItem("totalClaimToday");
+}
+
+function incrementTotalClaim() {
+    let total = parseInt(localStorage.getItem("totalClaimToday"));
+    total += 1;
+    localStorage.setItem("totalClaimToday", total);
+    totalClaimToday.textContent = total;
+}
+
+/* LIVE FEED */
+
+const fakeUsers = ["agus88", "andi77", "rudi99", "bintang88", "leo123", "surya77"];
+
+function updateLiveFeed() {
+    const randomUser = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
+    liveFeedText.textContent =
+        `🎉 Member ${randomUser} berhasil claim Rp 20.000`;
+}
+
+setInterval(updateLiveFeed, 5000);
+updateLiveFeed();
+
+/* LOGOUT */
+
 function logout() {
     localStorage.removeItem("activeUser");
     location.reload();
@@ -117,11 +157,12 @@ function logout() {
 loginBtn.addEventListener("click", login);
 claimButton.addEventListener("click", claimBonus);
 logoutBtn.addEventListener("click", logout);
-window.addEventListener("load", showDashboard);
+window.addEventListener("load", () => {
+    showDashboard();
+    initTotalClaim();
+});
 
-/* ===============================
-   3D Moving Background
-=================================*/
+/* 3D BACKGROUND */
 
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
