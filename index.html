@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>RINJANI4D - Bonus Freebet</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RINJANI4D - Bonus Freebet</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- CARD BONUS -->
 <div class="card">
   <div class="logo">RINJANI4D</div>
-
   <h1>BONUS FREEBET 20.000</h1>
   <div class="subtitle">Eksklusif untuk Member Baru</div>
-
   <input type="text" id="userId" placeholder="Masukkan User ID Anda">
-
-  <button onclick="startClaim()">CLAIM BONUS SEKARANG</button>
+  <button id="claimBtn">AMBIL SEKARANG</button>
 </div>
 
-<!-- Modal -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box" id="modalContent">
     <h2>Memproses Bonus...</h2>
     <p id="statusText">Menghubungkan ke pusat bonus...</p>
-
     <div class="progress-container">
       <div class="progress-bar" id="progressBar"></div>
     </div>
   </div>
+</div>
+
+<!-- LIVE FEED -->
+<div class="live-feed">
+  <h3>Riwayat Klaim Terbaru</h3>
+  <ul id="feedList"></ul>
 </div>
 
 <script src="script.js"></script>
