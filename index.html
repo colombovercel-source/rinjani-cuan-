@@ -35,19 +35,16 @@
     <button id="claimBtn">Verifikasi & Cek Bonus</button>
 
     <div class="meta">
-      ✔ Bonus 1x per akun &nbsp;•&nbsp;
-      ✔ Tanpa potongan &nbsp;•&nbsp;
-      ✔ Proses instan
+      ✔ Bonus 1x per akun • ✔ Tanpa potongan • ✔ Proses instan
     </div>
   </section>
 
-  <!-- Trust Section -->
+  <!-- History -->
   <section class="card secondary">
     <h2>Aktivitas Bonus Terbaru</h2>
     <div class="history" id="history"></div>
   </section>
 
-  <!-- Footer CTA -->
   <a href="https://rinjanipuncak.com" target="_blank" class="cs">
     Hubungi Customer Service Resmi
   </a>
@@ -61,9 +58,9 @@
 <!-- Popup -->
 <div class="popup" id="popup">
   <div class="popup-box">
-    <div class="popup-badge">BERHASIL</div>
+    <div class="popup-badge" id="popupBadge">BERHASIL</div>
     <div class="popup-user" id="popupUser"></div>
-    <p>Bonus Anda:</p>
+    <p id="popupText">Bonus Anda:</p>
     <div class="popup-amount" id="popupAmount"></div>
     <div class="popup-time" id="popupTime"></div>
     <button onclick="closePopup()">Tutup</button>
