@@ -1,37 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RINJANI4D - Bonus Freebet</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>RINJANI4D | Bonus Member Resmi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- CARD BONUS -->
-<div class="card">
-  <div class="logo">RINJANI4D</div>
-  <h1>BONUS FREEBET 20.000</h1>
-  <div class="subtitle">Eksklusif untuk Member Baru</div>
-  <input type="text" id="userId" placeholder="Masukkan User ID Anda">
-  <button id="claimBtn">AMBIL SEKARANG</button>
-</div>
+<div class="app">
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box" id="modalContent">
-    <h2>Memproses Bonus...</h2>
-    <p id="statusText">Menghubungkan ke pusat bonus...</p>
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">RINJANI4D</div>
+    <div class="system">
+      <span class="dot"></span>
+      Sistem Normal
     </div>
-  </div>
+  </header>
+
+  <!-- Main Card -->
+  <section class="card primary">
+    <h1>Bonus Member Baru</h1>
+    <p class="lead">
+      Program resmi RINJANI4D untuk member yang baru terdaftar.
+      Semua klaim tercatat otomatis oleh sistem.
+    </p>
+
+    <div class="form-group">
+      <label>User ID</label>
+      <input type="text" id="userId" placeholder="Masukkan User ID Anda">
+    </div>
+
+    <button id="claimBtn">Verifikasi & Cek Bonus</button>
+
+    <div class="meta">
+      ✔ Bonus 1x per akun &nbsp;•&nbsp;
+      ✔ Tanpa potongan &nbsp;•&nbsp;
+      ✔ Proses instan
+    </div>
+  </section>
+
+  <!-- Trust Section -->
+  <section class="card secondary">
+    <h2>Aktivitas Bonus Terbaru</h2>
+    <div class="history" id="history"></div>
+  </section>
+
+  <!-- Footer CTA -->
+  <a href="https://rinjanipuncak.com" target="_blank" class="cs">
+    Hubungi Customer Service Resmi
+  </a>
+
+  <footer class="footer">
+    © 2026 RINJANI4D • Sistem Bonus Otomatis • Semua hak dilindungi
+  </footer>
+
 </div>
 
-<!-- LIVE FEED -->
-<div class="live-feed">
-  <h3>Riwayat Klaim Terbaru</h3>
-  <ul id="feedList"></ul>
+<!-- Popup -->
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <div class="popup-badge">BERHASIL</div>
+    <div class="popup-user" id="popupUser"></div>
+    <p>Bonus Anda:</p>
+    <div class="popup-amount" id="popupAmount"></div>
+    <div class="popup-time" id="popupTime"></div>
+    <button onclick="closePopup()">Tutup</button>
+  </div>
 </div>
 
 <script src="script.js"></script>
