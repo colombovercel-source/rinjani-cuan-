@@ -1,225 +1,51 @@
-const BONUS_AMOUNT = 20000;
-const CLAIM_INTERVAL = 24 * 60 * 60 * 1000;
+function startClaim() {
+  var userId = document.getElementById("userId").value;
 
-const loginCard = document.getElementById("loginCard");
-const dashboardCard = document.getElementById("dashboardCard");
-const usernameInput = document.getElementById("usernameInput");
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const displayUsername = document.getElementById("displayUsername");
-const balanceAmount = document.getElementById("balanceAmount");
-const claimButton = document.getElementById("claimButton");
-const statusMessage = document.getElementById("statusMessage");
-const totalClaimToday = document.getElementById("totalClaimToday");
-const liveFeedText = document.getElementById("liveFeedText");
+  if(userId === "") {
+    alert("Silakan masukkan User ID terlebih dahulu.");
+    return;
+  }
 
-let countdownInterval = null;
-
-/* LOGIN */
-
-function getUserKey(username) {
-    return `rinjani4d_${username}`;
+  document.getElementById("modal").style.display = "flex";
+  simulateProgress(userId);
 }
 
-function login() {
-    const username = usernameInput.value.trim();
-    if (!username) {
-        alert("Username tidak boleh kosong!");
-        return;
+function simulateProgress(userId) {
+  var progress = 0;
+  var bar = document.getElementById("progressBar");
+  var status = document.getElementById("statusText");
+
+  var interval = setInterval(function() {
+    progress += 10;
+    bar.style.width = progress + "%";
+
+    if(progress == 40) {
+      status.innerHTML = "Memverifikasi User ID...";
+    }
+    if(progress == 70) {
+      status.innerHTML = "Mengaktifkan Bonus Freebet...";
     }
 
-    localStorage.setItem("activeUser", username);
-
-    const userKey = getUserKey(username);
-    if (!localStorage.getItem(userKey)) {
-        localStorage.setItem(userKey, JSON.stringify({
-            balance: 0,
-            lastClaim: null
-        }));
+    if(progress >= 100) {
+      clearInterval(interval);
+      showSuccess(userId);
     }
-
-    showDashboard();
+  }, 400);
 }
 
-function showDashboard() {
-    const username = localStorage.getItem("activeUser");
-    if (!username) return;
-
-    loginCard.classList.add("hidden");
-    dashboardCard.classList.remove("hidden");
-
-    displayUsername.textContent = username;
-    updateBalance();
-    checkClaimStatus();
+function showSuccess(userId) {
+  document.getElementById("modalContent").innerHTML = `
+    <h2>Selamat 🎉</h2>
+    <p>
+      User ID <b>${userId}</b><br><br>
+      Berhasil Claim Bonus Freebet 20.000
+      <br><br>
+      Silakan screenshot halaman ini dan hubungi CS untuk proses aktivasi bonus.
+    </p>
+    <button onclick="goToCS()">HUBUNGI CS</button>
+  `;
 }
 
-/* CLAIM */
-
-function updateBalance() {
-    const username = localStorage.getItem("activeUser");
-    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
-    balanceAmount.textContent = "Rp " + userData.balance.toLocaleString();
+function goToCS() {
+  window.location.href = "https://rinjanipuncak.com";
 }
-
-function claimBonus() {
-    const username = localStorage.getItem("activeUser");
-    const userKey = getUserKey(username);
-    const userData = JSON.parse(localStorage.getItem(userKey));
-    const now = Date.now();
-
-    if (userData.lastClaim && now - userData.lastClaim < CLAIM_INTERVAL) return;
-
-    userData.balance += BONUS_AMOUNT;
-    userData.lastClaim = now;
-
-    localStorage.setItem(userKey, JSON.stringify(userData));
-
-    incrementTotalClaim();
-    updateBalance();
-    checkClaimStatus();
-    alert("FREEBET 20.000 berhasil diklaim!");
-}
-
-function checkClaimStatus() {
-    const username = localStorage.getItem("activeUser");
-    const userData = JSON.parse(localStorage.getItem(getUserKey(username)));
-    const now = Date.now();
-
-    if (!userData.lastClaim || now - userData.lastClaim >= CLAIM_INTERVAL) {
-        statusMessage.textContent = "Freebet siap diklaim!";
-        claimButton.disabled = false;
-        return;
-    }
-
-    claimButton.disabled = true;
-    const remaining = CLAIM_INTERVAL - (now - userData.lastClaim);
-    startCountdown(remaining);
-}
-
-function startCountdown(time) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    countdownInterval = setInterval(() => {
-        if (time <= 0) {
-            clearInterval(countdownInterval);
-            checkClaimStatus();
-            return;
-        }
-
-        const hours = Math.floor(time / 3600000);
-        const minutes = Math.floor((time % 3600000) / 60000);
-        const seconds = Math.floor((time % 60000) / 1000);
-
-        statusMessage.textContent =
-            `Tunggu ${hours}j ${minutes}m ${seconds}d untuk claim berikutnya`;
-
-        time -= 1000;
-    }, 1000);
-}
-
-/* TOTAL CLAIM */
-
-function initTotalClaim() {
-    if (!localStorage.getItem("totalClaimToday")) {
-        const start = Math.floor(Math.random() * 150) + 120;
-        localStorage.setItem("totalClaimToday", start);
-    }
-    totalClaimToday.textContent = localStorage.getItem("totalClaimToday");
-}
-
-function incrementTotalClaim() {
-    let total = parseInt(localStorage.getItem("totalClaimToday"));
-    total += 1;
-    localStorage.setItem("totalClaimToday", total);
-    totalClaimToday.textContent = total;
-}
-
-/* LIVE FEED */
-
-const fakeUsers = ["agus88", "andi77", "rudi99", "bintang88", "leo123", "surya77"];
-
-function updateLiveFeed() {
-    const randomUser = fakeUsers[Math.floor(Math.random() * fakeUsers.length)];
-    liveFeedText.textContent =
-        `🎉 Member ${randomUser} berhasil claim Rp 20.000`;
-}
-
-setInterval(updateLiveFeed, 5000);
-updateLiveFeed();
-
-/* LOGOUT */
-
-function logout() {
-    localStorage.removeItem("activeUser");
-    location.reload();
-}
-
-loginBtn.addEventListener("click", login);
-claimButton.addEventListener("click", claimBonus);
-logoutBtn.addEventListener("click", logout);
-window.addEventListener("load", () => {
-    showDashboard();
-    initTotalClaim();
-});
-
-/* 3D BACKGROUND */
-
-const canvas = document.getElementById("bgCanvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.z = Math.random() * canvas.width;
-    }
-
-    move() {
-        this.z -= 2;
-        if (this.z <= 0) this.z = canvas.width;
-    }
-
-    draw() {
-        const x = (this.x - canvas.width / 2) * (canvas.width / this.z) + canvas.width / 2;
-        const y = (this.y - canvas.height / 2) * (canvas.width / this.z) + canvas.height / 2;
-        const size = (1 - this.z / canvas.width) * 3;
-
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = "cyan";
-        ctx.fill();
-    }
-}
-
-function initParticles() {
-    particles = [];
-    for (let i = 0; i < 200; i++) {
-        particles.push(new Particle());
-    }
-}
-
-function animate() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach(p => {
-        p.move();
-        p.draw();
-    });
-
-    requestAnimationFrame(animate);
-}
-
-window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    initParticles();
-});
-
-initParticles();
-animate();
