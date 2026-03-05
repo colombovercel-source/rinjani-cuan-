@@ -1,72 +1,114 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>RINJANI4D | Bonus Member Resmi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Rive Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1 / 1;
+            background: #222;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background-color: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app">
+    <h2>Interaktif Rive Engine</h2>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">RINJANI4D</div>
-    <div class="system">
-      <span class="dot"></span>
-      Sistem Normal
-    </div>
-  </header>
-
-  <!-- Main Card -->
-  <section class="card primary">
-    <h1>Bonus Member Baru</h1>
-    <p class="lead">
-      Program resmi RINJANI4D untuk member yang baru terdaftar.
-      Semua klaim tercatat otomatis oleh sistem.
-    </p>
-
-    <div class="form-group">
-      <label>User ID</label>
-      <input type="text" id="userId" placeholder="Masukkan User ID Anda">
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
     </div>
 
-    <button id="claimBtn">Verifikasi & Cek Bonus</button>
-
-    <div class="meta">
-      ✔ Bonus 1x per akun • ✔ Tanpa potongan • ✔ Proses instan
+    <div class="controls">
+        <button id="btn-trigger">Ganti State (Trigger)</button>
     </div>
-  </section>
 
-  <!-- History -->
-  <section class="card secondary">
-    <h2>Aktivitas Bonus Terbaru</h2>
-    <div class="history" id="history"></div>
-  </section>
+    <p class="info">Animasi ini menggunakan State Machine untuk transisi yang mulus.</p>
 
-  <a href="https://rinjanipuncak.com" target="_blank" class="cs">
-    Hubungi Customer Service Resmi
-  </a>
+    <script src="https://unpkg.com/@rive-app/canvas@latest"></script>
 
-  <footer class="footer">
-    © 2026 RINJANI4D • Sistem Bonus Otomatis • Semua hak dilindungi
-  </footer>
+    <script>
+        // 1. Inisialisasi Instance Rive
+        const r = new rive.Rive({
+            // Source file animasi (.riv)
+            src: "https://cdn.rive.app/animations/vehicles.riv",
+            canvas: document.getElementById("canvas"),
+            autoplay: true,
+            // Nama State Machine yang ada di dalam file Rive
+            stateMachines: "bumpy", 
+            onLoad: () => {
+                // Pastikan gambar tajam di layar Retina/High DPI
+                r.resizeDrawingSurfaceToCanvas();
 
-</div>
+                // 2. Hubungkan Tombol HTML dengan Input di Rive
+                const inputs = r.stateMachineInputs("bumpy");
+                
+                // Cari input spesifik di dalam State Machine (contoh: trigger bernama 'bump')
+                const bumpTrigger = inputs.find(i => i.name === "bump");
 
-<!-- Popup -->
-<div class="popup" id="popup">
-  <div class="popup-box">
-    <div class="popup-badge" id="popupBadge">BERHASIL</div>
-    <div class="popup-user" id="popupUser"></div>
-    <p id="popupText">Bonus Anda:</p>
-    <div class="popup-amount" id="popupAmount"></div>
-    <div class="popup-time" id="popupTime"></div>
-    <button onclick="closePopup()">Tutup</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
+                document.getElementById("btn-trigger").addEventListener("click", () => {
+                    if (bumpTrigger) {
+                        bumpTrigger.fire(); // Memicu animasi "bump" di Rive
+                        console.log("State Triggered!");
+                    }
+                });
+            },
+        });
+    </script>
 </body>
 </html>
